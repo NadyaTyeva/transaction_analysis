@@ -26,7 +26,7 @@ def filter_by_date(df: pd.DataFrame, date: datetime) -> pd.DataFrame:
 
 
 def get_cards_info(df: pd.DataFrame) -> list[dict]:
-    ...
+    return {}
 
 
 def get_greeting() -> str:
