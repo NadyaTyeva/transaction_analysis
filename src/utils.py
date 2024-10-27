@@ -19,7 +19,7 @@ def get_operations() -> pd.DataFrame:
     return df
 
 def filter_by_date(df: pd.DataFrame, date: datetime) -> pd.DataFrame:
-    '''Функция фильтрует операции и возвращает только те которые были с начала месяца до указанной даты'''
+    '''Функция фильтрует операции и возвращает только те операции, которые были с начала месяца до указанной даты'''
     start_date = pd.to_datetime(date.replace(day=1))
     end_date = pd.to_datetime(date + timedelta(days=1))
 
@@ -27,9 +27,24 @@ def filter_by_date(df: pd.DataFrame, date: datetime) -> pd.DataFrame:
     print(df)
     return df
 
+def get_greeting() -> str:
+    '''Приветствуем пользователя,
+    возвращаем сообщение с приветствием в зависимости от вермени суток'''
+    now = datetime.now()
+    now_time = now.time()
+    print(now_time)
+    if time(6, 0) < now_time < time(12, 0):
+        return 'Доброе утро'
+    elif time(12, 0) < now_time < time(18, 0):
+        return 'Добрый день'
+    elif time(18, 0) < now_time < time(24, 0):
+        return 'Добрый вечер'
+    else:
+        return 'Доброй ночи'
 
 
 def get_cards_info(df: pd.DataFrame) -> list[dict]:
+    '''Функция принимает DataFrame и возвращает значения в виде списка словарей'''
     df['last_digits'] = df['Номер карты'].str[-4:]
     result = df.groupby('last_digits').agg(
         total_spent=('Сумма операции', lambda x: -x.sum()),  # Суммируем только расходы (отрицательные значения)
@@ -49,28 +64,31 @@ def get_cards_info(df: pd.DataFrame) -> list[dict]:
 
 
 
+def get_top_transactions(df: pd.DataFrame) -> list[dict]:
+    '''Функция принимает DataFrame и возвращает значения в виде списка словарей с лучшими транзакциями'''
+    top_transactions = df.sort_values(by='Сумма операции', ascending=True).head(5)
 
-''' {
-      "last_digits/номер карты": "5814",
-      "total_spent: всего потрачено": 1262.00,
-      "cashback"Ж кешбек: 12.62
+    # Форматируем результаты в нужный формат
+    result = [
+            {
+                "date": transaction['Дата операции'].strftime('%d.%m.%Y'),  # Преобразуем дату в нужный формат
+                "amount": abs(transaction['Сумма операции']),  # Берем абсолютное значение суммы
+                "category": transaction['Категория'],
+                "description": transaction['Описание']
+            }
+            for index, transaction in top_transactions.iterrows()  # Используем итератор для построчной обработки
+        ]
+
+    return result
+
+
+
+    '''{
+      "date": "21.12.2021",
+      "amount": 1198.23,
+      "category": "Переводы",
+      "description": "Перевод Кредитная карта. ТП 10.2 RUR"
     }'''
-
-
-def get_greeting() -> str:
-    '''Приветствуем пользователя,
-    возвращаем сообщение с приветствием в зависимости от вермени суток'''
-    now = datetime.now()
-    now_time = now.time()
-    print(now_time)
-    if time(6, 0) < now_time < time(12, 0):
-        return 'Доброе утро'
-    elif time(12, 0) < now_time < time(18, 0):
-        return 'Добрый день'
-    elif time(18, 0) < now_time < time(24, 0):
-        return 'Добрый вечер'
-    else:
-        return 'Доброй ночи'
 
 
 

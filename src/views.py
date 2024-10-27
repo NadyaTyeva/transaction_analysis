@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from src.utils import filter_by_date, get_operations, get_greeting, get_cards_info
+from src.utils import filter_by_date, get_operations, get_greeting, get_cards_info, get_top_transactions
 
 
 def main_page(date: str) -> str:
@@ -11,7 +11,8 @@ def main_page(date: str) -> str:
 
     result = {
         'greeting': get_greeting(),
-        'cards': get_cards_info(df)
+        'cards': get_cards_info(df),
+        'top_transactions': get_top_transactions(df)
     }
     return json.dumps(result,ensure_ascii=False, indent=2)
 
