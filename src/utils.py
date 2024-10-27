@@ -2,6 +2,12 @@ from datetime import timedelta, datetime, time
 
 import pandas as pd
 
+import requests
+
+import json
+
+from dotenv import load_dotenv
+
 from src.config import BASE_DIR
 
 OPERATIONS_PATH = BASE_DIR.joinpath('data', 'operations.xlsx')
@@ -81,14 +87,68 @@ def get_top_transactions(df: pd.DataFrame) -> list[dict]:
 
     return result
 
+def get_currency_rates(): #-> list[dict]:
+    '''Функция для получения данных о курсе валют на данное число'''
+
+    with open('user_settings.json', 'r', encoding='utf-8') as file:
+        user_settings = json.load(file)
+    user_currencies = user_settings.get("user_currencies", [])
+    user_stocks = user_settings.get("user_stocks", [])
+
+    # Получение данных о валютах
+    currency_api_url = 'https://api.coinlayer.com/live?access_key={currency_access_key}'
+    load_dotenv()
+    currency_access_key = os.getenv("API_KEY")  # Вставьте ваш ключ доступа
+    currency_params = {
+        'access_key': currency_access_key,
+        'currencies': ','.join(user_currencies)
+    }
+
+    #try:
+       # currency_response = requests.get(currency_api_url, params=currency_params)
+       # currency_data = currency_response.json()
+       # if currency_response.status_code != 200:
+         #   print("Error fetching currency data:", currency_data)
+        #    return
+
+        # Получение данных о акциях
+        #stock_api_url = 'https://api.example.com/stocks'  # Замените на реальный URL API для акций
+        #stock_params = {
+        #    'symbols': ','.join(user_stocks)
+        #}
+
+        #stock_response = requests.get(stock_api_url, params=stock_params)
+        #stock_data = stock_response.json()
+        #if stock_response.status_code != 200:
+         #   print("Error fetching stock data:", stock_data)
+         #   return
+
+        # Обработка и возврат данных
+        return {
+            "currencies": currency_data.get("rates", {}),
+            "stocks": stock_data
+        }
+
+    except requests.exceptions.RequestException as e:
+        print("Request error:", e)
+
+    # Пример использования функции
 
 
-    '''{
-      "date": "21.12.2021",
-      "amount": 1198.23,
-      "category": "Переводы",
-      "description": "Перевод Кредитная карта. ТП 10.2 RUR"
+if __name__ == "__main__":
+    data = get_currency_and_stock_data()
+    if data:
+        print("Курсы валют:", data["currencies"])
+        print("Цены акций:", data["stocks"])
+'''
+'''
+ {
+      "currency": "USD",
+      "rate": 73.21
+    },
+    {
+      "currency": "EUR",
+      "rate": 87.08
     }'''
-
 
 
