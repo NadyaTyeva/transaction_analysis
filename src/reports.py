@@ -1,7 +1,8 @@
-import pandas as pd
 import logging
 from datetime import timedelta
 from typing import Optional
+
+import pandas as pd
 
 from src.utils import get_operations
 

@@ -1,12 +1,9 @@
+import json
 import os
-from datetime import timedelta, datetime, time
+from datetime import datetime, time, timedelta
 
 import pandas as pd
-
 import requests
-
-import json
-
 from dotenv import load_dotenv
 
 from src.config import BASE_DIR

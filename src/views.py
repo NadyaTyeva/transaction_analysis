@@ -4,8 +4,14 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 
-from src.utils import (filter_by_date, get_operations, get_greeting,
-                       get_cards_info, get_top_transactions, get_currency_rates)
+from src.utils import (
+    filter_by_date,
+    get_cards_info,
+    get_currency_rates,
+    get_greeting,
+    get_operations,
+    get_top_transactions,
+)
 
 load_dotenv()  # Загружаем переменные окружения из .env
 api_key = os.getenv("API_KEY")  # Получаем токен доступа из переменных окружения
