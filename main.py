@@ -1,6 +1,3 @@
-from datetime import datetime
-
-from src.utils import get_operations, filter_by_date
 from src.views import main_page
 
 

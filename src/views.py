@@ -18,6 +18,7 @@ api_key = os.getenv("API_KEY")  # Получаем токен доступа и�
 
 
 def main_page(date: str) -> str:
+    '''Функция возвращает приветствие, а так же данные о тратах, курсе валют, акций'''
     date = datetime.strptime(date, '%Y-%m-%d')
     df = get_operations()
     df = filter_by_date(df, date)

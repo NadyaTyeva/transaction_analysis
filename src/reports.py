@@ -12,7 +12,7 @@ df = get_operations()
 
 
 def save_report_to_file(func):
-    """Декоратор для сохранения отчета в файл."""
+    '''Декоратор для сохранения отчета в файл.'''
 
     def wrapper(*args, **kwargs):
         report = func(*args, **kwargs)
@@ -29,7 +29,7 @@ def save_report_to_file(func):
 def spending_by_category(transactions: pd.DataFrame,
                          category: str,
                          date: Optional[str] = None) -> pd.DataFrame:
-    """Возвращает траты по заданной категории за последние три месяца."""
+    '''Возвращает траты по заданной категории за последние три месяца.'''
 
     date = pd.to_datetime(date)
     start_date = date - timedelta(days=90)
