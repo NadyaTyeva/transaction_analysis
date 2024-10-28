@@ -1,6 +1,6 @@
 import pandas as pd
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional
 
 from src.utils import get_operations
@@ -8,6 +8,7 @@ from src.utils import get_operations
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 df = get_operations()
+
 
 def save_report_to_file(func):
     """Декоратор для сохранения отчета в файл."""
@@ -21,6 +22,7 @@ def save_report_to_file(func):
         return report
 
     return wrapper
+
 
 @save_report_to_file
 def spending_by_category(transactions: pd.DataFrame,
@@ -40,6 +42,7 @@ def spending_by_category(transactions: pd.DataFrame,
 
     return filtered_data
 
+
 if __name__ == '__main__':
-    report = spending_by_category(df, 'Ж/д билеты','2020-05-20')
+    report = spending_by_category(df, 'Ж/д билеты', '2020-05-20')
     print(report)
