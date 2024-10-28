@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta, datetime, time
 
 import pandas as pd
@@ -87,10 +88,71 @@ def get_top_transactions(df: pd.DataFrame) -> list[dict]:
 
     return result
 
-def get_currency_rates(): #-> list[dict]:
-    '''Функция для получения данных о курсе валют на данное число'''
 
+def get_currency_rates(api_key): #-> list[dict]:
+    '''Функция для получения данных о курсе валют на данное число'''
+    # Шаг 1: Загрузите пользовательские настройки из JSON файла
     with open('user_settings.json', 'r', encoding='utf-8') as file:
+        user_settings = json.load(file)
+
+    user_currencies = user_settings['user_currencies']
+    user_stocks = user_settings['user_stocks']
+
+    load_dotenv()  # Загружаем переменные окружения из .env
+    access_key = os.getenv("API_KEY")  # Получаем токен доступа из переменных окружения
+
+    # Шаг 2: Получите данные о курсах валют
+    currency_response = requests.get(f'http://api.coinlayer.com/live?access_key={access_key}')
+
+    currency_data = currency_response.json()
+
+    # Проверка на наличие ошибки в ответе
+    if currency_response.status_code != 200 or 'error' in currency_data:
+        print("Ошибка получения данных о валюте:", currency_data.get('error', 'Неизвестная ошибка'))
+        return
+
+    # Фильтрация нужных валют
+    currency_rates = {currency: currency_data['rates'].get(currency) for currency in user_currencies}
+
+    # Шаг 3: Получите данные о ценах на акции (вы должны предоставить свои данные)
+    # Предположим, вы можете использовать другой API для акций, замените эту часть
+    #stock_prices = {}
+    #for stock in user_stocks:
+        # В этом примере используется заглушка. Реально нужно будет использовать API для акций.
+        #stock_response = requests.get(f'https://api.example.com/stocks/{stock}?api_key={api_key}')
+       # if stock_response.status_code == 200:
+       #     stock_data = stock_response.json()
+       #     stock_prices[stock] = stock_data['price']  # Замените на правильное поле
+       # else:
+       #     print(f"Ошибка получения данных о акции {stock}: {stock_response.text}")
+
+    # Шаг 4: Вывод данных
+    print(currency_rates)
+
+
+    #    [
+    #        {
+    #            "currency": "USD",
+    #            "rate": 73.21
+    #        },
+    #        {
+    #            "currency": "EUR",
+    #            "rate": 87.08
+    #        }
+    #    ]
+
+
+    #for currency, rate in currency_rates.items():
+    #    rates = []
+    #    rates['currency'] = 'rate'
+
+    #return rates
+
+    #print("\\nЦены акций:")
+   # for stock, price in stock_prices.items():
+     #   print(f"{stock}: {price}")
+
+'''    with open('user_settings.json', 'r', encoding='utf-8') as file:
         user_settings = json.load(file)
     user_currencies = user_settings.get("user_currencies", [])
     user_stocks = user_settings.get("user_stocks", [])
@@ -117,11 +179,11 @@ def get_currency_rates(): #-> list[dict]:
         #    'symbols': ','.join(user_stocks)
         #}
 
-        #stock_response = requests.get(stock_api_url, params=stock_params)
-        #stock_data = stock_response.json()
-        #if stock_response.status_code != 200:
-         #   print("Error fetching stock data:", stock_data)
-         #   return
+        stock_response = requests.get(stock_api_url, params=stock_params)
+        stock_data = stock_response.json()
+        if stock_response.status_code != 200:
+            print("Error fetching stock data:", stock_data)
+            return
 
         # Обработка и возврат данных
         return {
