@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
+
 @pytest.fixture
 def operations_data():
     data = {
@@ -12,6 +13,7 @@ def operations_data():
 
     }
     return data
+
 
 @pytest.fixture
 @patch.object(pd, 'read_excel')
