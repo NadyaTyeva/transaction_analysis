@@ -1,12 +1,9 @@
+import json
 import os
-from datetime import timedelta, datetime, time
+from datetime import datetime, time, timedelta
 
 import pandas as pd
-
 import requests
-
-import json
-
 from dotenv import load_dotenv
 
 from src.config import BASE_DIR
@@ -21,9 +18,10 @@ def get_operations() -> pd.DataFrame:
 
     df['Дата операции'] = pd.to_datetime(df['Дата операции'], format='%d.%m.%Y %H:%M:%S')
     df['Дата платежа'] = pd.to_datetime(df['Дата платежа'], format='%d.%m.%Y')
-    df = df.loc[df['Статус'] == 'OK'] #фильтрует операции по статусу
+    df = df.loc[df['Статус'] == 'OK']  # фильтрует операции по статусу
 
     return df
+
 
 def filter_by_date(df: pd.DataFrame, date: datetime) -> pd.DataFrame:
     '''Функция фильтрует операции и возвращает только те операции, которые были с начала месяца до указанной даты'''
@@ -33,6 +31,7 @@ def filter_by_date(df: pd.DataFrame, date: datetime) -> pd.DataFrame:
     df = df.loc[(df['Дата операции'] >= start_date) & (df['Дата операции'] < end_date)]
     print(df)
     return df
+
 
 def get_greeting() -> str:
     '''Приветствуем пользователя,
@@ -98,11 +97,8 @@ def get_currency_rates(api_key): #-> list[dict]:
     user_currencies = user_settings['user_currencies']
     user_stocks = user_settings['user_stocks']
 
-    load_dotenv()  # Загружаем переменные окружения из .env
-    access_key = os.getenv("API_KEY")  # Получаем токен доступа из переменных окружения
-
-    # Шаг 2: Получите данные о курсах валют
-    currency_response = requests.get(f'http://api.coinlayer.com/live?access_key={access_key}')
+        # Шаг 2: Получите данные о курсах валют
+    currency_response = requests.get(f'http://api.coinlayer.com/live?access_key={api_key}')
 
     currency_data = currency_response.json()
 

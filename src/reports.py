@@ -1,7 +1,8 @@
-import pandas as pd
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional
+
+import pandas as pd
 
 from src.utils import get_operations
 
@@ -9,8 +10,9 @@ from src.utils import get_operations
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 df = get_operations()
 
+
 def save_report_to_file(func):
-    """Декоратор для сохранения отчета в файл."""
+    '''Декоратор для сохранения отчета в файл.'''
 
     def wrapper(*args, **kwargs):
         report = func(*args, **kwargs)
@@ -22,11 +24,12 @@ def save_report_to_file(func):
 
     return wrapper
 
+
 @save_report_to_file
 def spending_by_category(transactions: pd.DataFrame,
                          category: str,
                          date: Optional[str] = None) -> pd.DataFrame:
-    """Возвращает траты по заданной категории за последние три месяца."""
+    '''Возвращает траты по заданной категории за последние три месяца.'''
 
     date = pd.to_datetime(date)
     start_date = date - timedelta(days=90)
@@ -40,6 +43,7 @@ def spending_by_category(transactions: pd.DataFrame,
 
     return filtered_data
 
+
 if __name__ == '__main__':
-    report = spending_by_category(df, 'Ж/д билеты','2020-05-20')
+    report = spending_by_category(df, 'Ж/д билеты', '2020-05-20')
     print(report)
